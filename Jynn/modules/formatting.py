@@ -1,12 +1,11 @@
 from discord.ext import commands
-from discord.ext.commands import Cog
 import discord
 import pyfiglet
 import os
 import math
 
 
-class Formatting(Cog):
+class Formatting(commands.Cog):
 	"""
 	Text formatting plugin
 
