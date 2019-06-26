@@ -16,6 +16,7 @@ class Jynn(commands.AutoShardedBot):
 		super().__init__(
 			command_prefix=commands.when_mentioned_or(config.PREFIX),
 			reconnect=True,
+			owner_id=238356301439041536
 		)
 
 		self.config = config
