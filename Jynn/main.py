@@ -1,11 +1,6 @@
 from discord.ext import commands
-import config
-
-
-modules = [
-    'modules.formatting',
-    'jishaku'
-]
+from . import config
+import os
 
 
 class Jynn(commands.AutoShardedBot):
@@ -17,6 +12,12 @@ class Jynn(commands.AutoShardedBot):
         )
 
         self.config = config
+
+        modules = []
+
+        for file in os.listdir("modules"):
+            if file.endswith(".py"):
+                modules.append(file.rstrip("py").rstrip("."))
 
         for module in modules:
             try:
