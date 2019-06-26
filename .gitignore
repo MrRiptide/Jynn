@@ -1,1 +1,7 @@
 token
+
+*.pyc
+*.png
+*.yaml
+*.txt
+*.txt
