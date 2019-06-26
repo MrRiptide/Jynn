@@ -2,10 +2,13 @@ from discord.ext import commands
 import traceback
 import discord
 import config
+import os
 
+os.environ['JISHAKU_HIDE'] = 'True'
 
 modules = [
 	'modules.formatting',
+	'modules.help',
 	'jishaku'
 ]
 
