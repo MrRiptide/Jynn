@@ -1,6 +1,5 @@
 *.pyc
 *.png
-*.yaml
 *.txt
 *.xml
 *.iml
