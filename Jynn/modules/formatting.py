@@ -1,9 +1,9 @@
 from discord.ext import commands
-import discord
 import pyfiglet
-import os
-import math
 import asyncio
+import discord
+import math
+import os
 import re
 
 
