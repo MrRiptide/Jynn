@@ -90,18 +90,17 @@ class Formatting(commands.Cog):
 		try:
 			new_phrase = pyfiglet.figlet_format(phrase, font)
 		except pyfiglet.FontNotFound:
-			await ctx.send(f'Invalid font name "{font}"')
-			return
+			return await ctx.send(f'The font `{font}` was not found.')
 		output = ""
 		for line in new_phrase.splitlines():
 			output += f"\u200B{line}\u200B\n"
-		output = f"`\n{output}`"
-		print(output)
-		await ctx.send(output)
+		if len(output) > 2000:
+			return await ctx.send('The text generated was too long for discord.')
+		return await ctx.send(f'```\n{output}```')
 
 	@commands.command(name="fonts")
 	async def _fonts(self, ctx, page=1):
-		fonts = []
+		font_list = []
 		for file in os.listdir("../venv/Lib/site-packages/pyfiglet/fonts"):
 			if file.endswith(".flf"):
 				font = ""
@@ -141,7 +140,7 @@ class Formatting(commands.Cog):
 
 			await msg.edit(embed=gen_font_page(fonts, page))
 
-	@commands.command(name="owo")
+	@commands.command(name="owoify", aliases=['owo', 'uwu'])
 	async def _owo(self, ctx, *, statement):
 		statement = replace_keep_case("l", "w", statement)
 		statement = replace_keep_case("r", "w", statement)
@@ -165,7 +164,6 @@ def gen_font_page(fonts, page):
 		i += 2
 	return embed
 
-
 def replace_keep_case(word, replacement, text):
 	def func(match):
 		g = match.group()
@@ -177,7 +175,6 @@ def replace_keep_case(word, replacement, text):
 			return replacement.upper()
 		return replacement
 	return re.sub(word, func, text, flags=re.I)
-
 
 def get_argument(options, attribute, default=1):
 	try:
