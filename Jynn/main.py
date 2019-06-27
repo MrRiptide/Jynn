@@ -5,6 +5,9 @@ import os
 import traceback
 
 
+os.environ['JISHAKU_HIDE'] = 'True'
+
+
 class Jynn(commands.AutoShardedBot):
 
     def __init__(self):
@@ -15,7 +18,16 @@ class Jynn(commands.AutoShardedBot):
 
         self.config = config
 
+
+	def __init__(self):
+		super().__init__(
+			command_prefix=commands.when_mentioned_or(config.PREFIX),
+			reconnect=True,
+			owner_id=238356301439041536
+		)
+
         modules = []
+
 
         for file in os.listdir("modules"):
             if file.endswith(".py"):
