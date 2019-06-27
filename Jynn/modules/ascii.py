@@ -108,6 +108,7 @@ class ASCII(Cog):
                 time.sleep(10)
                 await cancelled.delete()
                 return
+        if subcommand == ""
 
 
 def setup(bot):
