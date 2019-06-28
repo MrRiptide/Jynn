@@ -176,14 +176,14 @@ def replace_keep_case(word, replacement, text):
 		return replacement
 	return re.sub(word, func, text, flags=re.I)
 
-def get_argument(options, attribute, default=1):
-	try:
-		argument = options[options.index(attribute) + 1]
-	except IndexError:
-		return default
-	if argument.startswith("-"):
-		return default
-	return argument
+def get_argument(options, attribute, default):
+    try:
+        argument = options[options.index(attribute) + 1]
+    except IndexError:
+        return default
+    if argument.startswith("-"):
+        return default
+    return argument
 
 
 def setup(bot):
