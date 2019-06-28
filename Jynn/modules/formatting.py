@@ -180,7 +180,7 @@ def replace_keep_case(word, replacement, text):
     return re.sub(word, func, text, flags=re.I)
 
 
-def get_argument(options, attribute, default=1):
+def get_argument(options, attribute, default):
     try:
         argument = options[options.index(attribute) + 1]
     except IndexError:
