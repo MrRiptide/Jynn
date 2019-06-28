@@ -1,0 +1,46 @@
+- !!python/object:modules.ascii.Art
+  art: <o/
+  artist: 251520892453126150
+  tags:
+  - dab
+- !!python/object:modules.ascii.Art
+  art: o/
+  artist: 251520892453126150
+  tags:
+  - wave
+- !!python/object:modules.ascii.Art
+  art: :D
+  artist: 251520892453126150
+  tags:
+  - smile
+  - face
+- !!python/object:modules.ascii.Art
+  art: :)
+  artist: 251520892453126150
+  tags:
+  - smile
+  - face
+- !!python/object:modules.ascii.Art
+  art: =)
+  artist: 251520892453126150
+  tags:
+  - smile
+  - face
+- !!python/object:modules.ascii.Art
+  art: "D:"
+  artist: 251520892453126150
+  tags:
+  - frown
+  - face
+- !!python/object:modules.ascii.Art
+  art: :(
+  artist: 251520892453126150
+  tags:
+  - frown
+  - face
+- !!python/object:modules.ascii.Art
+  art: =(
+  artist: 251520892453126150
+  tags:
+  - frown
+  - face
