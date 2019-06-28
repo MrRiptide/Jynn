@@ -44,7 +44,7 @@ def save_library(library):
 
 
 class ASCII(Cog):
-    """
+	"""
     ASCII module
 
     Includes ASCII library and image to ASCII
@@ -260,4 +260,4 @@ class ASCII(Cog):
 
 
 def setup(bot):
-    bot.add_cog(ASCII(bot))
+	bot.add_cog(ASCII(bot))
