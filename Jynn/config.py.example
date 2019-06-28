@@ -1,0 +1,3 @@
+TOKEN = '<enter key here>'
+PREFIX = '!'
+#Replace <enter key here> with a key and then rename this to config.py

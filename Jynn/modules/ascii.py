@@ -60,13 +60,18 @@ class ASCII(Cog):
 
     @_ascii.command(name="search")
     async def _ascii_search(self, ctx, *tags):
+        """
+        Searches ascii library for given tags
+        **tags:** Tags to search for, separated by spaces(tags with spaces must be surrounded by quotes)
+        """
         page_msg = await ctx.send("Loading...")
 
         library = load_library()
-        tags = set(tags)
+        tags = set([x.lower() for x in tags])
 
         def art_sort(elem):
-            return len(tags.intersection(set(elem.tags)))
+            a = set([x.lower() for x in elem.tags])
+            return len(tags.intersection(a))
         library.sort(key=art_sort)
 
         library.reverse()
@@ -123,6 +128,9 @@ class ASCII(Cog):
 
     @_ascii.command(name="submit")
     async def _ascii_submit(self, ctx):
+        """
+        Submits ascii art to be reviewed
+        """
         last = await ctx.send("Enter ascii art:")
 
         def check(m):
@@ -195,6 +203,9 @@ class ASCII(Cog):
 
     @_ascii.command(name="review")
     async def _ascii_review(self, ctx):
+        """
+        Reviews submitted ascii art
+        """
         pending = load_pending()
         i = 0
         msg = await ctx.send("Loading...")
@@ -217,8 +228,9 @@ class ASCII(Cog):
             if i > 0:
                 await msg.add_reaction("⏪")
             await msg.add_reaction("✅")
+            await msg.add_reaction("🏳")
             await msg.add_reaction("❌")
-            if i < len(pending):
+            if i < len(pending)-1:
                 await msg.add_reaction("⏩")
 
             def check(emoji, user):
@@ -241,6 +253,28 @@ class ASCII(Cog):
                 save_library(library)
                 pending.pop(i)
                 save_pending(pending)
+            if reaction.emoji == "🏳":
+                report_embed = discord.Embed(title=f"Flagging art")
+                report_embed.add_field(name="Are you sure you want to flag", value=item.art, inline=False)
+                report_embed.add_field(name="Tags:", value=", ".join(item.tags), inline=False)
+                report_embed.add_field(name="Submitted by:", value=f"{artist_user.display_name}#{artist_user.discriminator}", inline=False)
+                await msg.edit(embed=report_embed)
+
+                def check(emoji, user):
+                    return user == ctx.author and str(emoji) in ["✅", "❌"]
+
+                try:
+                    reaction, user = await self.bot.wait_for("reaction_add", timeout=60, check=check)
+                except asyncio.TimeoutError:
+                    await msg.delete()
+                    timeout = await ctx.send("Timed out")
+                    time.sleep(10)
+                    await timeout.delete()
+                    return
+                if reaction.emoji == "✅":
+                    pass
+                if reaction.emoji == "❌":
+                    pass
             if reaction.emoji == "❌":
                 pending.pop(i)
                 save_pending(pending)
@@ -251,6 +285,10 @@ class ASCII(Cog):
 
     @commands.command(name="convert")
     async def _convert(self, ctx):
+        """
+        Converts an image to ascii
+        *An image must be included as an attachment*
+        """
         if len(ctx.message.attachments) == 0:
             await ctx.send("Missing an image to convert")
             return

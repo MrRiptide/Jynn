@@ -12,13 +12,15 @@ king_james = """`1234567890-=𝔮𝔴𝔢𝔯𝔱𝔶𝔲𝔦𝔬𝔭[]\/𝔞�
 cursive = """`𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫𝟢-=𝓆𝓌𝑒𝓇𝓉𝓎𝓊𝒾𝑜𝓅[]\/𝒶𝓈𝒹𝒻𝑔𝒽𝒿𝓀𝓁;'𝓏𝓍𝒸𝓋𝒷𝓃𝓂,.~!@#$%^&*()_+𝒬𝒲𝐸𝑅𝒯𝒴𝒰𝐼𝒪𝒫{}|𝒜𝒮𝒟𝐹𝒢𝐻𝒥𝒦𝐿:"𝒵𝒳𝒞𝒱𝐵𝒩𝑀<>? """
 hollow = """`𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡𝟘-=𝕢𝕨𝕖𝕣𝕥𝕪𝕦𝕚𝕠𝕡[]\/𝕒𝕤𝕕𝕗𝕘𝕙𝕛𝕜𝕝;'𝕫𝕩𝕔𝕧𝕓𝕟𝕞,.~!@#$%^&*()_+ℚ𝕎𝔼ℝ𝕋𝕐𝕌𝕀𝕆ℙ{}|𝔸𝕊𝔻𝔽𝔾ℍ𝕁𝕂𝕃:"ℤ𝕏ℂ𝕍𝔹ℕ𝕄<>? """
 box = """`1234567890-=🆀🆆🅴🆁🆃🆈🆄🅸🅾🅿[]\/🅰🆂🅳🅵🅶🅷🅹🅺🅻;'🆉🆇🅲🆅🅱🅽🅼,.~!@#$%^&*()_+🆀🆆🅴🆁🆃🆈🆄🅸🅾🅿{}|🅰🆂🅳🅵🅶🅷🅹🅺🅻:"🆉🆇🅲🆅🅱🅽🅼<>? """
+small = """`¹²³⁴⁵⁶⁷⁸⁹⁰⁻⁼ᵠʷᵉʳᵗʸᵘᶦᵒᵖ[]\/ᵃˢᵈᶠᵍʰʲᵏˡ;'ᶻˣᶜᵛᵇⁿᵐ,.~ᵎ@#$%^&*⁽⁾_⁺ᵠᵂᴱᴿᵀʸᵁᴵᴼᴾ{}|ᴬˢᴰᶠᴳᴴᴶᴷᴸ:"ᶻˣᶜⱽᴮᴺᴹ<>ˀ """
 
 fonts = {
     "normal": normal,
     "king_james": king_james,
     "cursive": cursive,
     "hollow": hollow,
-    "box": box
+    "box": box,
+    "small": small
 }
 
 
@@ -33,7 +35,37 @@ class Formatting(commands.Cog):
         self.bot = bot
 
     @commands.command(name="format")
-    async def _format(self, ctx, phrase, *formatting_options):
+    async def _format(self, ctx, *, param):
+        """
+        Formats given phrase in a variety of ways
+            **param:** Broken into phrase and formatting_options based on the first tag
+            **phrase:** Phrase to format, multi-word phrases must be surrounded by quotes
+            **formatting_options:** List of options to format with
+
+            **Formatting options:**
+            -upper: Converts phrase to uppercase
+            -lower: Converts phrase to lowercase(takes priority over -upper)
+            -font: Gives phrase a given font(king_james, cursive, hollow, box, small)(default: cursive)
+            -echo: Repeats each letter a given number of times(default: 3)
+            -repeat: Repeats the entire phrase a given number of times(default: 2)
+            -spaces: Inserts a given number of spaces between each character(default: 1)
+            -spoilereach: Marks each character as a spoiler(caution: incompatible with -spoiler)
+            -italics: Gives entire phrase italics effect
+            -bold: Gives entire phrase bold effect
+            -underline: Gives entire phrase underline effect
+            -spoiler: Marks entire phrase as a spoiler(caution: incompatible with -spoilereach)
+        """
+        try:
+            tag_start = param.index(" -") + 1
+        except ValueError:
+            ctx.send("No formatting options provided, use !help format for assistance on this command")
+            return
+        options = param[tag_start:]
+        formatting_options = options.split(" ")
+        phrase = param[:tag_start]
+        print(options)
+        print(formatting_options)
+        print(phrase)
         if "-upper" in formatting_options:
             phrase = phrase.upper()
         if "-lower" in formatting_options:
@@ -45,12 +77,13 @@ class Formatting(commands.Cog):
                 for c in phrase:
                     temp += fonts[font][normal.index(c)]
             except KeyError:
+                await ctx.send("Font chosen does not exist")
                 raise KeyError("Font chosen does not exist")
             phrase = temp
         if "-echo" in formatting_options:
             try:
                 echos = int(get_argument(formatting_options, "-echo", 3))
-            except TypeError:
+            except TypeError or ValueError:
                 echos = 3
             temp = ""
             for c in phrase:
@@ -59,13 +92,13 @@ class Formatting(commands.Cog):
         if "-repeat" in formatting_options:
             try:
                 repeats = int(get_argument(formatting_options, "-repeat", 2))
-            except TypeError:
+            except TypeError or ValueError:
                 repeats = 2
             phrase = phrase*repeats
         if "-spaces" in formatting_options:
             try:
                 spaces = int(get_argument(formatting_options, "-spaces", 1))
-            except TypeError:
+            except TypeError or ValueError:
                 spaces = 1
             temp = " " * spaces
             phrase = temp.join(phrase)
@@ -80,13 +113,18 @@ class Formatting(commands.Cog):
             phrase = f"**{phrase}**"
         if "-underline" in formatting_options:
             phrase = f"__{phrase}__"
-        if "-spoiler" in formatting_options:
+        if "-spoiler" in formatting_options and "-spoilereach" not in formatting_options:
             phrase = f"||{phrase}||"
         await ctx.send(phrase)
         await ctx.send(f"```{phrase}```")
 
     @commands.command(name="font")
-    async def _font(self, ctx, phrase, font):
+    async def _font(self, ctx, font, *, phrase):
+        """
+        Changes entire phrase to a given large font
+        **font:** Font to use, fonts can be found using the !fonts command
+        **phrase:** Phrase to change font of
+        """
         try:
             new_phrase = pyfiglet.figlet_format(phrase, font)
         except pyfiglet.FontNotFound:
@@ -100,7 +138,11 @@ class Formatting(commands.Cog):
 
     @commands.command(name="fonts")
     async def _fonts(self, ctx, page=1):
-        font_list = []
+        """
+        Returns a list of fonts that can be used in the !font command
+        **page:** Page to view(default: 1)
+        """
+        fonts = []
         for file in os.listdir("../venv/Lib/site-packages/pyfiglet/fonts"):
             if file.endswith(".flf"):
                 font = ""
@@ -142,6 +184,10 @@ class Formatting(commands.Cog):
 
     @commands.command(name="owoify", aliases=['owo', 'uwu'])
     async def _owo(self, ctx, *, statement):
+        """
+        Owo-ifies a statement
+        **statement:** Statement to owoify
+        """
         statement = replace_keep_case("l", "w", statement)
         statement = replace_keep_case("r", "w", statement)
         statement = replace_keep_case("ove", "uv", statement)
@@ -164,6 +210,7 @@ def gen_font_page(fonts, page):
         i += 2
     return embed
 
+
 def replace_keep_case(word, replacement, text):
     def func(match):
         g = match.group()
@@ -175,6 +222,7 @@ def replace_keep_case(word, replacement, text):
             return replacement.upper()
         return replacement
     return re.sub(word, func, text, flags=re.I)
+
 
 def get_argument(options, attribute, default):
     try:
@@ -188,3 +236,7 @@ def get_argument(options, attribute, default):
 
 def setup(bot):
     bot.add_cog(Formatting(bot))
+    """cmd = bot.get_command("format")
+    cmd.signature = "<phrase> [formatting_options...]"
+    bot.remove_command("format")
+    bot.add_command(cmd)"""

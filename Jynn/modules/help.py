@@ -6,7 +6,7 @@ class HelpCommand(commands.HelpCommand):
 
 	def __init__(self):
 		super().__init__(command_attrs={
-			'help': "Shows help about the Bot, an Extension or a Command.\n\n**<arguement>** means the arguement is **required.**\n**[arguement]** means the arguement is **optional.**\n**[a|b]** means it can be **'A' or 'B'.**\n**[arguement...]** means you can have **multiple arguements.**"
+			'help': "Shows help about the Bot, an Extension or a Command.\n\n**<argument>** means the argument is **required.**\n**[argument]** means the argument is **optional.**\n**[a|b]** means it can be **'A' or 'B'.**\n**[argument...]** means you can have **multiple arguments.**"
 		})
 
 	def get_command_signature(self, command):
@@ -46,7 +46,7 @@ class HelpCommand(commands.HelpCommand):
 				cog_help = 'No Help for this extension.'
 			embed.description += f"**{cog.qualified_name}**:\n{cog_help}\n"
 		embed.description += f"\n**Tips:**\n - You can do `{self.context.prefix} help <extension_name>` for more information on an extension and its commands.\n" \
-							 f"- Make sure you use the correct capitalisation when getting help for an extension, eg `{self.context.prefix} help Images`.\n" \
+							 f"- Make sure you use the correct capitalisation when getting help for an extension, eg `{self.context.prefix} help ASCII`.\n" \
 							 f"- The voice extension does not currently check for permissions so be sure to give the bot the required voice chat permissions."
 		return await self.context.send(embed=embed)
 
