@@ -51,3 +51,10 @@
   - shocked
   - surprised
   - face
+- !!python/object:modules.ascii.Art
+  art: ;)
+  artist: 251520892453126150
+  tags:
+  - wink
+  - face
+  - smile

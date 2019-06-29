@@ -164,6 +164,8 @@ class ASCII(Cog):
     async def _ascii_submit(self, ctx):
         """
         Submits ascii art to be reviewed
+
+        Note: NSFW ascii art will give you a strike, and 3 strikes will result in you being blocked from further submission
         """
 
         user = load_user(ctx.author.id)
