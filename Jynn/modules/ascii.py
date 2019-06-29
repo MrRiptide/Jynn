@@ -15,6 +15,36 @@ class Art(object):
         self.artist = artist
 
 
+class User(object):
+    def __init__(self, flags=[]):
+        self.flags = flags
+
+
+def load_user(user_id):
+    with open("users.yaml", "r") as users_file:
+        if users_file.read().strip("\n") == "":
+            return User()
+        users_file.seek(0)
+        users_data = yaml.load(users_file, Loader=yaml.FullLoader)
+        try:
+            user = users_data[str(user_id)]
+            return user
+        except KeyError:
+            return User()
+
+
+def save_user(user, user_id):
+    with open("users.yaml", "r") as users_file:
+        if users_file.read().strip("\n") == "":
+            users = {}
+        else:
+            users_file.seek(0)
+            users = yaml.load(users_file, Loader=yaml.FullLoader)
+    with open("users.yaml", "w") as users_file:
+        users[str(user_id)] = user
+        yaml.dump(users, users_file)
+
+
 def load_pending():
     with open("ascii/pending.yaml", "r", encoding="utf8") as pending_file:
         if pending_file.read().strip("\n") == "":
@@ -52,6 +82,10 @@ class ASCII(Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.command(name="test")
+    async def _test(self, ctx):
+        load_user(ctx.author.id)
 
     @commands.group("ascii")
     async def _ascii(self, ctx):
@@ -131,6 +165,12 @@ class ASCII(Cog):
         """
         Submits ascii art to be reviewed
         """
+
+        user = load_user(ctx.author.id)
+        if len(user.flags) >= 3:
+            await ctx.send("You have been blocked from submitting more ascii arts due to previous flags.")
+            return
+
         last = await ctx.send("Enter ascii art:")
 
         def check(m):
@@ -259,6 +299,10 @@ class ASCII(Cog):
                 report_embed.add_field(name="Tags:", value=", ".join(item.tags), inline=False)
                 report_embed.add_field(name="Submitted by:", value=f"{artist_user.display_name}#{artist_user.discriminator}", inline=False)
                 await msg.edit(embed=report_embed)
+                await msg.clear_reactions()
+
+                await msg.add_reaction("✅")
+                await msg.add_reaction("❌")
 
                 def check(emoji, user):
                     return user == ctx.author and str(emoji) in ["✅", "❌"]
@@ -272,7 +316,11 @@ class ASCII(Cog):
                     await timeout.delete()
                     return
                 if reaction.emoji == "✅":
-                    pass
+                    user = load_user(item.artist)
+                    user.flags.append(item)
+                    save_user(user, item.artist)
+                    pending.pop(i)
+                    save_pending(pending)
                 if reaction.emoji == "❌":
                     pass
             if reaction.emoji == "❌":
@@ -293,7 +341,6 @@ class ASCII(Cog):
             await ctx.send("Missing an image to convert")
             return
         output = ascii.loadFromUrl(ctx.message.attachments[0].url, columns=40, color=False)
-        print(output)
         await ctx.send(f"```{output}```")
 
 
