@@ -250,9 +250,9 @@ class ASCII(Cog):
         i = 0
         msg = await ctx.send("Loading...")
         while len(pending) > 0:
-            embed = discord.Embed(title=f"Pending art {i+1}/{len(pending)}")
             if i > len(pending) - 1:
                 i -= 1
+            embed = discord.Embed(title=f"Pending art {i+1}/{len(pending)}")
             item = pending[i]
             embed.add_field(name="Art:", value=item.art)
             embed.add_field(name="Tags:", value=", ".join(item.tags))
