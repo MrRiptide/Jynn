@@ -1,3 +1,4 @@
-TOKEN = '<enter key here>'
+TOKEN = '<enter token here>'
 PREFIX = '!'
-#Replace <enter key here> with a key and then rename this to config.py
+
+# Replace '<enter token here>' with you discord bot token and then rename this file to config.py

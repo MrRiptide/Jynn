@@ -1,8 +1,8 @@
 from discord.ext import commands
+import traceback
 import discord
 import config
 import os
-import traceback
 
 
 os.environ['JISHAKU_HIDE'] = 'True'
